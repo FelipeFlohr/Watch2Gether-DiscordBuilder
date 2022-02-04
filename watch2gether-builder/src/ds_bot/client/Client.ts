@@ -1,28 +1,36 @@
-import {token} from "../../../token.json"
-import {Client} from "discord.js";
-import {ActivityTypes} from "discord.js/typings/enums";
+import DiscordJS, { Intents } from "discord.js";
+import {token, guildId} from "../../../token.json"
+import {PingPong} from "../commands/PingPong";
 
-export class Bot extends Client {
+const client = new DiscordJS.Client({
+    intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES]
+})
 
-    constructor() {
-        super({ intents: 515 });
+client.on("ready", () => {
+    console.log("Bot is ready")
+
+    const guild = client.guilds.cache.get(guildId)
+    let commands
+
+    commands = guild ? guild.commands : client.application?.commands
+
+    commands?.create({
+        name: "ping",
+        description: "Responde com pong!"
+    })
+})
+
+// Routing commands
+client.on("interactionCreate", interaction => {
+    if (!interaction.isCommand()) return;
+
+    const { commandName, options } = interaction
+
+    if (commandName === "ping") {
+        new PingPong(interaction)
+    } else if (commandName === "buildw2g") {
+
     }
+})
 
-    public start() {
-        this.login(token)
-            .then(() => {
-                console.log("Bot online")
-                this.setCommands()
-            })
-            .catch((err) => console.log(`Bot failed to start. ${err}`))
-    }
-
-    private async setCommands() {
-        this.on("ready", () => {
-            this.user.setActivity("fodeta", {type: ActivityTypes.WATCHING})
-        })
-    }
-}
-
-let bot = new Bot()
-bot.start()
+client.login(token)
