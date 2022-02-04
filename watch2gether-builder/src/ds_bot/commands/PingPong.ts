@@ -1,7 +1,7 @@
-import {Command} from "../models/Command";
+import {SlashCommand} from "../models/SlashCommand";
 import {CommandInteraction} from "discord.js";
 
-export class PingPong extends Command {
+export class PingPong extends SlashCommand {
 
     constructor(interaction: CommandInteraction) {
         super(interaction, () => {
