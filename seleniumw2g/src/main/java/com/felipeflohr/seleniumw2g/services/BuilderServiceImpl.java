@@ -1,10 +1,15 @@
 package com.felipeflohr.seleniumw2g.services;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
@@ -13,8 +18,22 @@ import com.felipeflohr.seleniumw2g.exception.ElementNotFoundException;
 import com.felipeflohr.seleniumw2g.exception.EmptyVideoArrayException;
 import com.felipeflohr.seleniumw2g.model.Builder;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
+
 @Service
-public class BuilderServiceImpl extends BuilderService {
+class BuilderServiceImpl implements BuilderService {
+	
+	private WebDriver driver;
+	private List<String> nonWorkingVideos;
+	private ChromeOptions chromeOptions;
+
+	public BuilderServiceImpl() {
+		chromeOptions = new ChromeOptions();
+		chromeOptions.addArguments("--mute-audio");
+		WebDriverManager.chromedriver().setup();
+		
+		this.nonWorkingVideos = new ArrayList<>();
+	}
 
 	@Override
 	public Builder build(String[] videos) {
@@ -31,6 +50,19 @@ public class BuilderServiceImpl extends BuilderService {
 		System.out.println("Driver closed.");
 
 		return new Builder(nonWorkingVideos, url);
+	}
+	
+	@Override
+	public void createDriver() {
+		if (driver == null) {
+			driver = new ChromeDriver(chromeOptions);
+		}
+	}
+
+	@Override
+	public void close() {
+		driver.close();
+		driver = null;
 	}
 
 	@Override
@@ -71,11 +103,6 @@ public class BuilderServiceImpl extends BuilderService {
 		}
 
 		return roomInput.getAttribute("value");
-	}
-
-	@Override
-	public String[] getNonWorkingVideos() {
-		return nonWorkingVideos.toArray(new String[nonWorkingVideos.size()]);
 	}
 
 	@Override
@@ -128,4 +155,8 @@ public class BuilderServiceImpl extends BuilderService {
 		});
 	}
 
+	@Override
+	public String[] getNonWorkingVideos() {
+		return nonWorkingVideos.toArray(new String[nonWorkingVideos.size()]);
+	}
 }

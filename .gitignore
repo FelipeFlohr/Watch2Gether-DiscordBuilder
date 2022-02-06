@@ -37,3 +37,4 @@ build/
 /discord-bot/node_modules
 /discord-bot/bot.json
 /discord-bot/dist
+/.metadata/

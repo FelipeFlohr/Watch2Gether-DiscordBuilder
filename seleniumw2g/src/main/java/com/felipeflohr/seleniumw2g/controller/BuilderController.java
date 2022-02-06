@@ -2,6 +2,7 @@ package com.felipeflohr.seleniumw2g.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,11 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.felipeflohr.seleniumw2g.model.BuildUrls;
 import com.felipeflohr.seleniumw2g.model.Builder;
-import com.felipeflohr.seleniumw2g.services.BuilderServiceImpl;
+import com.felipeflohr.seleniumw2g.services.BuilderService;
 
 @RestController
 @RequestMapping(path = "/w2g")
 public class BuilderController {
+
+	@Autowired
+	BuilderService builderService;
 
 	@GetMapping(path = "/helloworld")
 	public String helloWorld() {
@@ -32,7 +36,7 @@ public class BuilderController {
 			"https://twitter.com/Cockson_Boy/status/14889685832164679738429048239048234",
 			"https://twitter.com/Cockson_Boy/status/1488968583216467973789234"};
 
-		return new BuilderServiceImpl().build(videos);
+		return builderService.build(videos);
 	}
 	
 	@PostMapping(path = "/build")
@@ -45,8 +49,8 @@ public class BuilderController {
 			return new ResponseEntity<>("The video array is empty", HttpStatus.BAD_REQUEST);
 		} else {
 			System.out.println("RECEIVED: " + urls);
-			
-			var build = new BuilderServiceImpl().build(urls.getUrls());
+
+			var build = builderService.build(urls.getUrls());
 			Builder builder = new Builder(build.getNonWorkingVideos(), build.getUrl());
 			return new ResponseEntity<>(builder, HttpStatus.OK);
 		}
