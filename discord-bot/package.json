@@ -1,0 +1,26 @@
+{
+  "name": "discord-w2g-bot",
+  "version": "1.0.0",
+  "description": "The Discord Watch2Gether Bot!",
+  "main": "dist/src/App.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "w2g",
+    "watch2gether"
+  ],
+  "author": "Felipe Matheus Flohr",
+  "license": "MIT",
+  "dependencies": {
+    "@types/chromedriver": "^81.0.1",
+    "@types/express": "^4.17.13",
+    "@types/selenium-webdriver": "^4.0.17",
+    "chromedriver": "^97.0.4",
+    "discord.js": "^13.6.0",
+    "express": "^4.17.2",
+    "selenium-webdriver": "^4.1.1"
+  }
+}
