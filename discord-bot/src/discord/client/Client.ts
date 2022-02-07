@@ -1,5 +1,6 @@
 import {Client, Intents, Message, TextBasedChannel} from "discord.js";
 import {token, guildId} from "../../../bot.json"
+import {workingSites} from "../../../links.json"
 
 export class Bot extends Client {
 
@@ -49,7 +50,6 @@ export class Bot extends Client {
                 const counterLimit = 5
 
                 while (counter < counterLimit && !w2gLinkFound) {
-                    console.log("Counter: " + counter)
                     await channel.messages.fetch({limit: 100, before: lastMsgId})
                         .then(messages => {
                             // Will add the messages to the array
@@ -115,25 +115,33 @@ export class Bot extends Client {
                 let nonW2GVideos: string[] = []
 
                 afterW2GMessages.forEach(msg => {
-                    let msgSplit = msg.content.split(" ")
+                    let msgSplit = msg.content.split(" ") // <- Will split each space for every message
                     msgSplit.forEach(m => {
-                        if (m.startsWith("https://twitter")
-                            || m.startsWith("https://www.twitter")
-                            || m.startsWith("https://www.youtube")
-                            || m.startsWith("https://youtu.be")) {
+                        const urlIsWorkingWebsite = () => { // Checks if the URL is part of the Working Websites, defined in "links.json"
+                            let anyMatch = false
+
+                            workingSites.forEach(site => {
+                                if (m.startsWith(site)) anyMatch = true;
+                            })
+
+                            return anyMatch;
+                        }
+
+                        if (urlIsWorkingWebsite()) {
                             w2gVideos.push(m)
-                        } else if (m.startsWith("https://m.facebook")) {
+                        } else if (m.startsWith("https://m.facebook")) { // <- Exception for Facebook Mobile links
                             nonW2GVideos.push(m.replace("m.facebook", "facebook"))
-                        } else if (m.startsWith("https://")) {
+                        } else if (m.startsWith("https://")) { // <- If the URL is not a working website, then it will be a "non W2G" video
                             nonW2GVideos.push(m)
                         }
                     })
                 })
 
                 await interaction.reply({
-                    content: `Watch2Gether built!\nTotal amount of Youtube/Twitter videos: ${w2gVideos.length} | Total amount of non-W2G videos: ${nonW2GVideos.length}`
+                    content: `Starting to build the Watch2Gether room. Total amount of videos: ${w2gVideos.length + nonW2GVideos.length}`
                 })
 
+                await console.log(`W2G Videos: ${w2gVideos}\nNon W2G Videos: ${nonW2GVideos}`)
             }
         })
     }
