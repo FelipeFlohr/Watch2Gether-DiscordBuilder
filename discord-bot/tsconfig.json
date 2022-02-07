@@ -3,7 +3,7 @@
     "module": "CommonJS",
     "esModuleInterop": true,
     "target": "ES6",
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "outDir": "dist",
     "baseUrl": ".",
     "watch": true,
