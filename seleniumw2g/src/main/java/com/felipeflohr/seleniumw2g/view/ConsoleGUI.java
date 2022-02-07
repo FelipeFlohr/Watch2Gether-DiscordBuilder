@@ -35,7 +35,7 @@ public class ConsoleGUI extends JFrame {
 			this.textArea = null;
 		}
 	}
-	
+
 	public PrintStream getPrintStream() {
 		OutputStream outputStream = new OutputStream() {
 			@Override

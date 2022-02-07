@@ -1,8 +1,12 @@
 package com.felipeflohr.seleniumw2g.model;
 
+import java.util.Arrays;
+
 public class BuildUrls {
 
-	private final String[] urls;
+	private String[] urls;
+	
+	public BuildUrls() {}
 
 	public BuildUrls(String[] urls) {
 		this.urls = urls;
@@ -10,5 +14,10 @@ public class BuildUrls {
 
 	public String[] getUrls() {
 		return urls;
+	}
+
+	@Override
+	public String toString() {
+		return "BuildUrls [urls=" + Arrays.toString(urls) + "]";
 	}
 }

@@ -46,7 +46,7 @@ class BuilderServiceImpl implements BuilderService {
 		addVideos(videos);
 		nonWorkingVideos = getNonWorkingVideos();
 
-		this.driver.close();
+		close();
 		System.out.println("Driver closed.");
 
 		return new Builder(nonWorkingVideos, url);
