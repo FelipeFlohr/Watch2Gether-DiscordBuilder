@@ -9,7 +9,7 @@ import com.felipeflohr.seleniumw2g.view.ConsoleGUI;
 public class Seleniumw2gApplication {
 
 	public static void main(String[] args) {
-		new ConsoleGUI();
+		//new ConsoleGUI(); // <- Turn off the commentaries to enable a Swing Console GUI
 		SpringApplication.run(Seleniumw2gApplication.class, args);
 	}
 
