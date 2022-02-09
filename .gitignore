@@ -34,7 +34,7 @@ build/
 
 ## 2flps things
 /seleniumw2g/src/test
-/discord-bot/node_modules
-/discord-bot/bot.json
-/discord-bot/dist
 /.metadata/
+/discord-bot/backend/dist
+/discord-bot/backend/node_modules
+/discord-bot/backend/bot.json
