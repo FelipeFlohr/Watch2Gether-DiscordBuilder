@@ -34,12 +34,31 @@ main {
     align-items: center;
 }
 
-.italic {
-    font-style: italic;
+main section {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
 }
 
 #w2g-current-status {
-    font-size: 18px;
+    font-size: 25px;
+}
+
+#w2g-btn-controllers button {
+    display: inline-block;
+    color: wheat;
+    background-color: orangered;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 35px;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+#w2g-btn-controllers button:hover {
+    background-color: rgb(218, 148, 18);
 }
 
 footer {
@@ -63,6 +82,12 @@ footer a {
     color: white;
 }
 
+/* Font style classes */
+.italic {
+    font-style: italic;
+}
+
+/* Media Queries */
 @media screen and (max-width: 1225px) {
     header h1 {
         font-size: 1.5em;
@@ -83,7 +108,7 @@ footer a {
 
 @media screen and (max-width: 500px) {
     header h1 {
-        font-size: 0.5em;
+        font-size: 0.7em;
     }
 }
 
