@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato');
+
+body {
+    display: grid;
+    grid-template-rows: 20% 70% 10%;
+    overflow-x: auto;
+    background-color: rgb(10, 10, 10);
+    color: wheat;
+    font-family: "Lato", sans-serif;
+    overflow: hidden;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    animation-name: fade-to-black-bg;
+    animation-duration: 4s;
+    margin: 0;
+}
+
+header {
+    display: flex;
+    font-size: 2.5em;
+    justify-content: center;
+    align-items: center;
+}
+
+header h1 {
+    font-weight: bolder;
+    text-align: center;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.italic {
+    font-style: italic;
+}
+
+#w2g-current-status {
+    font-size: 18px;
+}
+
+footer {
+    display: flex;
+    flex-flow: row wrap;
+    align-content: flex-end;
+    justify-content: center;
+}
+
+footer * {
+    margin: 10px 5px;
+}
+
+footer a {
+    text-decoration: underline ;
+    color: gray;
+}
+
+.pipe {
+    text-decoration: none;
+    color: white;
+}
+
+@media screen and (max-width: 1225px) {
+    header h1 {
+        font-size: 1.5em;
+    }
+}
+
+@media screen and (max-width: 915px) {
+    header h1 {
+        font-size: 1em;
+    }
+}
+
+@media screen and (max-width: 610px) {
+    header h1 {
+        font-size: 0.8em;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    header h1 {
+        font-size: 0.5em;
+    }
+}
+
+/* Animations */
+@keyframes fade-to-black-bg {
+    0% {
+        background-color: #222525;
+        color: white;
+        opacity: 0;
+    }
+    100% {
+        background-color: rgb(10, 10, 10);
+        color: wheat;
+        opacity: 1;
+    }
+}
