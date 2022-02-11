@@ -16,8 +16,10 @@
   "license": "MIT",
   "dependencies": {
     "@types/axios": "^0.14.0",
+    "@types/socket.io": "^3.0.2",
     "axios": "^0.25.0",
     "discord.js": "^13.6.0",
-    "nodemon": "^2.0.15"
+    "socket.io": "^4.4.1",
+    "socket.io-client": "^4.4.1"
   }
 }

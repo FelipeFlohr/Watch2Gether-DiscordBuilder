@@ -40,8 +40,13 @@ main section {
     align-items: center;
 }
 
+#w2g-stats * {
+    text-align: center;
+}
+
 #w2g-current-status {
     font-size: 25px;
+    font-weight: bolder;
 }
 
 #w2g-btn-controllers button {
@@ -54,11 +59,16 @@ main section {
     height: 50px;
     font-size: 35px;
     margin: 0 10px;
-    cursor: pointer;
 }
 
-#w2g-btn-controllers button:hover {
+#w2g-btn-controllers button:disabled {
+    color: darkgray;
+    background-color: gray;
+}
+
+#w2g-btn-controllers button:hover:enabled {
     background-color: rgb(218, 148, 18);
+    cursor: pointer;
 }
 
 footer {

@@ -4,6 +4,8 @@ public class Builder {
 
 	private String[] nonWorkingVideos;
 	private String url;
+	
+	public Builder() {}
 
 	public Builder(String[] nonWorkingVideos, String url) {
 		this.nonWorkingVideos = nonWorkingVideos;

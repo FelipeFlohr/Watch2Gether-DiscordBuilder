@@ -24,7 +24,7 @@ public class BuilderController {
 	public String helloWorld() {
 		return "Hello, World!";
 	}
-	
+
 	@PostMapping(path = "/build")
 	public ResponseEntity<Object> buildW2G(@RequestBody BuildUrls urls) {
 		System.out.println("RECEIVED: " + urls);
@@ -39,6 +39,7 @@ public class BuilderController {
 
 			var build = builderService.build(urls.getUrls());
 			Builder builder = new Builder(build.getNonWorkingVideos(), build.getUrl());
+
 			return new ResponseEntity<>(builder, HttpStatus.OK);
 		}
 	}
