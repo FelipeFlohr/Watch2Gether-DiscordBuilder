@@ -29,7 +29,7 @@ class BuilderServiceImpl implements BuilderService {
 
 	public BuilderServiceImpl() {
 		chromeOptions = new ChromeOptions();
-		chromeOptions.addArguments("--mute-audio");
+		chromeOptions.addArguments("--mute-audio", "--headless", "--disable-gpu");
 		WebDriverManager.chromedriver().setup();
 		
 		this.nonWorkingVideos = new ArrayList<>();

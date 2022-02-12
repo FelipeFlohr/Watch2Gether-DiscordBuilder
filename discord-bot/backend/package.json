@@ -4,7 +4,8 @@
   "description": "A Discord Watch2Gether Bot",
   "main": "dist/src/App.js",
   "scripts": {
-    "start": "nodemon start \"dist/src/App.js\""
+    "build": "tsc --build",
+    "clean": "tsc --build --clean"
   },
   "keywords": [
     "discord",

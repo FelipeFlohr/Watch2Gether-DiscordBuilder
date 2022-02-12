@@ -17,6 +17,7 @@ export class Bot extends Client {
 
             commands = guild ? guild.commands : this.application?.commands
 
+            // Creates the following commands if they do not exist
             commands?.create({
                 name: "ping",
                 description: "Replies with Pong!"

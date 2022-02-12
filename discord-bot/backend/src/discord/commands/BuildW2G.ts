@@ -4,7 +4,7 @@ import {workingSites} from "../../../links.json";
 import {Poster} from "../../utils/Poster";
 import {io} from "socket.io-client"
 
-const socket = io("http://localhost:3000")
+const socket = io("http://localhost:3000") // Socket.IO address
 
 export class Build implements Command{
 
@@ -14,7 +14,7 @@ export class Build implements Command{
         let channel: TextBasedChannel = interaction.channel
         console.log("Going to find W2G Link")
 
-        // WIll try to find a W2G link within a range of 500 messages
+        // Will try to find a W2G link within a range of 500 messages
         let msgArray: Message[] = []
         let lastMsgId: string = channel.lastMessageId;
         let counter = 0

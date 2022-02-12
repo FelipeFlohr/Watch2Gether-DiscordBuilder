@@ -1,5 +1,6 @@
-const axios = require("axios")
+import axios from "axios"
 
+// Class for executing POSTs
 export class Poster {
 
     public static async postToBuildW2G(data: any, url: string = "http://localhost:8080/w2g/build"): Promise<{

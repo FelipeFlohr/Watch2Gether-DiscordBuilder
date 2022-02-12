@@ -8,6 +8,10 @@ import java.io.PrintStream;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
+/**
+ * A GUI Window which prints the console of the Thread #01
+ * @author Felipe Matheus Flohr
+ */
 public class ConsoleGUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 

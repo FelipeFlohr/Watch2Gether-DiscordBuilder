@@ -3,8 +3,10 @@ package com.felipeflohr.seleniumw2g;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.felipeflohr.seleniumw2g.view.ConsoleGUI;
-
+/**
+ * The entry point of the application.
+ * @author Felipe Matheus Flohr
+ */
 @SpringBootApplication
 public class Seleniumw2gApplication {
 
