@@ -55,7 +55,9 @@ docker-compose up -d
 **Obs.: to run without Docker** you will need to execute each individual application (Selenium App, Backend and Frontend) on your local machine.
 
 Then, if no mistakes were made, the Discord Bot will be online and the command **/build** will be available, as you can see below:
-![](.readme-files\buildscreenshot.png)
+<p align="center">
+  <img src=".readme-files\buildscreenshot.png"></img>
+</p>
 
 Before using the command, it's very important to open the **Video Opener** at your Web Browser. The address is "**http://localhost:5500/**". The reason why is explained [here](#30-the-non-working-videos%22alternative-videos%22).
 
@@ -64,7 +66,9 @@ Now you may be able to use the **/build** command. On its usage, the Bot will tr
 ### 3.0 The *non working videos*/"*Alternative videos*"
 
 Every URL within the command's channel which does not start with any link provided on "*/discord-bot/backend/links.json*" will not be added to the Watch2Gether room. Instead, it's going to be added to the "***Alterinative videos***". Also, some videos may failed to be added to the Watch2Gether room, which in this case are going to be added the "***Non Working Videos***". Therefore, these videos are available in the **Video Opener** which its address is, by default **http://localhost:5500/**. When the Bot finishes building the Watch2Gether room, the **Video Opener** webpage should look like this:
-![](.readme-files\webpagescreenshot.png)
+<p align="center">
+  <img src=".readme-files\webpagescreenshot.png"></img>
+</p>
 
 ## 4 Dependencies
 
