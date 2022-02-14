@@ -1,0 +1,40 @@
+version: '3.9'
+networks:
+  w2g-bot:
+    name: w2g-bot
+    external: true
+services:
+  selenium:
+    image: felipeflohr/w2gds-botselenium:1.0
+    container_name: dsbotselenium
+    build:
+      context: ./seleniumw2g
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - w2g-bot
+  backend:
+    image: felipeflohr/w2gds-botbackend:1.0
+    container_name: dsbotbackend
+    build:
+      context: ./discord-bot/backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - w2g-bot
+    depends_on:
+      - selenium
+  frontend:
+    image: felipeflohr/w2gds-botfrontend:1.0
+    container_name: dsbotfrontend
+    build:
+      context: ./discord-bot/frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5500:5500"
+    networks:
+      - w2g-bot
+    depends_on:
+      - backend
