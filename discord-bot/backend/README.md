@@ -4,6 +4,5 @@ There needs to be a file called "*bot.json*" inside the root folder of the Disco
 ```json
 {
   "token": "Your Token ID goes here",
-  "guildId": "Your Guild ID goes here",
-  "port": // The Express.js server port hoes here
+  "guildId": "Your Guild ID goes here"
 }

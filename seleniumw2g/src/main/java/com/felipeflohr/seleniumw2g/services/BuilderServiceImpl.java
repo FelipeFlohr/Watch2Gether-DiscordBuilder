@@ -5,32 +5,33 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 import com.felipeflohr.seleniumw2g.exception.ElementNotFoundException;
 import com.felipeflohr.seleniumw2g.exception.EmptyVideoArrayException;
 import com.felipeflohr.seleniumw2g.model.Builder;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
-
 @Service
 class BuilderServiceImpl implements BuilderService {
-	
+
 	private WebDriver driver;
 	private List<String> nonWorkingVideos;
-	private ChromeOptions chromeOptions;
+	private FirefoxOptions firefoxOptions;
 
 	public BuilderServiceImpl() {
-		chromeOptions = new ChromeOptions();
-		chromeOptions.addArguments("--mute-audio", "--headless", "--disable-gpu");
-		WebDriverManager.chromedriver().setup();
+		firefoxOptions = new FirefoxOptions();
+		firefoxOptions.addArguments("--mute-audio", "--headless", "--disable-gpu");
+		WebDriverManager.firefoxdriver().setup();
 		
 		this.nonWorkingVideos = new ArrayList<>();
 	}
@@ -55,7 +56,7 @@ class BuilderServiceImpl implements BuilderService {
 	@Override
 	public void createDriver() {
 		if (driver == null) {
-			driver = new ChromeDriver(chromeOptions);
+			driver = new FirefoxDriver(firefoxOptions);
 		}
 	}
 
@@ -75,7 +76,7 @@ class BuilderServiceImpl implements BuilderService {
 
 		// Gets to the page
 		driver.get("https://www.w2g.tv/");
-		driver.manage().window().maximize();
+		driver.manage().window().setSize(new Dimension(1920, 1080));
 
 		// Click to create the room
 		driver.findElement(createRoomBtn).click();

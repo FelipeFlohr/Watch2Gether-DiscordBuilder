@@ -38,3 +38,5 @@ build/
 /discord-bot/backend/dist
 /discord-bot/backend/node_modules
 /discord-bot/backend/bot.json
+/discord-bot/backend/.dockerignore
+/seleniumw2g/.dockerignore

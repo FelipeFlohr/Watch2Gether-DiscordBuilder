@@ -1,7 +1,7 @@
 import {Command} from "../models/Command";
 import {CommandInteraction, Message, TextBasedChannel} from "discord.js";
 import {workingSites} from "../../../links.json";
-import {Poster} from "../../utils/Poster";
+import {Poster, SELENIUM_ADDRESS} from "../../utils/Poster";
 import {io} from "socket.io-client"
 
 const socket = io("http://localhost:3000") // Socket.IO address
@@ -122,7 +122,7 @@ export class Build implements Command{
             content: `Starting to build the Watch2Gether room. Total amount of videos: ${w2gVideos.length + nonW2GVideos.length}`
         })
 
-        console.log(`W2G Videos: ${w2gVideos.length}\nNon W2G Videos: ${nonW2GVideos.length}. Posting to Selenium Server...`)
+        console.log(`W2G Videos: ${w2gVideos.length}\nNon W2G Videos: ${nonW2GVideos.length}. Posting to Selenium Server (${SELENIUM_ADDRESS})...`)
 
         const w2g = await Poster.postToBuildW2G({
             "urls": w2gVideos.reverse()

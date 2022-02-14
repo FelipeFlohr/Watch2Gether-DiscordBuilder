@@ -1,15 +1,16 @@
-import {port} from "../../bot.json"
+const PORT = process.env.PORT || 3000
+const NWV_ADDRESS = process.env.NWV_ADDRESS || "http://localhost:5500"
 
 // Class for instantiate a Socket.IO connection
 export class SocketConnection {
     private io
 
     constructor() {
-        console.log("Creating Socket.io connection on port " + port)
+        console.log("Creating Socket.io connection on port " + PORT)
 
-        this.io = require("socket.io")(port, {
+        this.io = require("socket.io")(PORT, {
             cors: { // <- CORS settings
-                origin: ["http://localhost:5500", "http://127.0.0.1:5500"],
+                origin: [NWV_ADDRESS, "http://localhost:5500"],
                 methods: ["GET", "POST"],
                 allowedHeaders: ["Access-Control-Allow-Origin"],
                 credentials: true
