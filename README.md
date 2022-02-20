@@ -101,7 +101,7 @@ Q: Why you didn't you use Node.js' Selenium instead of doing it using Java + Spr
 - A: For some weird reason, Selenium on Node.js didn't work well, so I opted for the Java version.
 
 Q: I found some bug, how can I report?
-- A: Feel free to open a issue ticket or contact me on my e-mail: felipeflohrlol@gmail.com
+- A: Feel free to open an issue ticket or contact me on my e-mail: felipeflohrlol@gmail.com
 
 ## 6 License
 
