@@ -110,15 +110,16 @@ class BuilderServiceImpl implements BuilderService {
 	public void addVideo(String url) {
 		// Elements
 		final var searchBar = By.id("search-bar-input");
-		final var playlist = By.xpath("/html/body/div[4]/div[2]/div[2]/div[2]/div[3]/div[1]/div/select/option");
+//		final var playlist = By.xpath("/html/body/div[4]/div[2]/div[2]/div[2]/div[3]/div[1]/div/select/option");
 		final var addVideoBtn = By.xpath("//*[@id=\"w2g-search-results\"]/div[4]/div/div[3]/div[2]");
 
+		// This snippet of code used to work in the past, but for some reason it stopped
 		// Waits until the playlist be available
-		try {
-			new WebDriverWait(driver, 15).until(ExpectedConditions.presenceOfElementLocated(playlist));
-		} catch (TimeoutException e) {
-			throw new ElementNotFoundException("The playlist element was not found. Was the room created?", e);
-		}
+//		try {
+//			new WebDriverWait(driver, 15).until(ExpectedConditions.presenceOfElementLocated(playlist));
+//		} catch (TimeoutException e) {
+//			throw new ElementNotFoundException("The playlist element was not found. Was the room created?", e);
+//		}
 
 		// Clears the search bar
 		final WebElement searchBarElement = driver.findElement(searchBar);
