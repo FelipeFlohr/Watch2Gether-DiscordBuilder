@@ -27,6 +27,11 @@ export class Bot extends Client {
                 name: "build",
                 description: "Will build the Watch2Gether"
             })
+
+            this.user.setActivity("Building W2Gs!", {
+                type: "COMPETING",
+                url: "http://localhost:5500/"
+            })
         })
 
         // Routing commands. Since this is a small application, the commands' instructions will all be inside this file

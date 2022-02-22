@@ -59,7 +59,7 @@ export class Build implements Command{
         // Now it will get all videos after the last W2G Link
         let afterW2GMessages: Message[] = []
 
-        await channel.messages.fetch({after: w2gLink.id})
+        await channel.messages.fetch({after: w2gLink.id, limit: 100})
             .then(messages => {
                 messages.forEach(msg => afterW2GMessages.push(msg))
             })
@@ -124,16 +124,16 @@ export class Build implements Command{
 
         console.log(`W2G Videos: ${w2gVideos.length}\nNon W2G Videos: ${nonW2GVideos.length}. Posting to Selenium Server (${SELENIUM_ADDRESS})...`)
 
-        const w2g = await Poster.postToBuildW2G({
+        await Poster.postToBuildW2G({
             "urls": w2gVideos.reverse()
         }).then(w2gData => { // The following block will be executed if there's no problem on getting the W2G data
             const allNonWorkingVideos = nonW2GVideos.concat(w2gData.nonWorkingVideos) // Will join the W2G non working videos + Non W2G videos
             socket.emit("urls", allNonWorkingVideos) // Will send the videos through Socket.IO, which is being used on Frontend
             channel.send(`Watch2Gether built. Link: ${w2gData.url}`) // Will post the W2G URL on the Discord channel
         }, rej => {
-            channel.send("An error occurred during the building process. Please check to see if the building utils is running")
+            channel.send("An error occurred during the building process. Please check to see if the building utils is running\nRejection: " + rej)
         }).catch(err => {
-            channel.send("An error occurred during the building process. Please check to see if the building utils is running")
+            channel.send("An error occurred during the building process. Please check to see if the building utils is running\nError: " + err)
         })
     }
 }
