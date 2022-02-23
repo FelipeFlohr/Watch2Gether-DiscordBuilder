@@ -56,7 +56,7 @@ export class Build implements Command{
                 if (urlIsWorkingWebsite()) {
                     links.workingVideos.push(splitMsg)
                 } else if (splitMsg.startsWith("https://m.facebook")) {
-                    links.nonWorkingVideos.push(splitMsg)
+                    links.nonWorkingVideos.push(splitMsg.replace("m.facebook", "facebook"))
                 } else if (splitMsg.startsWith("https://")) {
                     links.nonWorkingVideos.push(splitMsg)
                 } else {
