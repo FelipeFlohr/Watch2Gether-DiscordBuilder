@@ -15,7 +15,7 @@ services:
     networks:
       - w2g-bot
   backend:
-    image: felipeflohr/w2gds-botbackend:1.1
+    image: felipeflohr/w2gds-botbackend:1.2
     container_name: dsbotbackend
     build:
       context: ./discord-bot/backend
