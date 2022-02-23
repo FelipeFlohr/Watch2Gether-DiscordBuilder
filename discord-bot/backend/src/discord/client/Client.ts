@@ -46,7 +46,10 @@ export class Bot extends Client {
             } else if (commandName === "build") {
                 if (!this.buildW2G) {
                     this.buildW2G = true
-                    await new Build().execute(interaction)
+
+                    let builder = new Build(interaction)
+                    await builder.execute()
+
                     this.buildW2G = false
                 } else {
                     await interaction.reply({

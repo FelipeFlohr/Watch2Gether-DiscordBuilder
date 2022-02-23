@@ -1,5 +1,8 @@
-import {CommandInteraction} from "discord.js";
+import {CommandInteraction, TextBasedChannel} from "discord.js";
 
 export interface Command {
-    execute(interaction?: CommandInteraction) : void
+    interaction?: CommandInteraction
+    channel: TextBasedChannel
+
+    execute()
 }

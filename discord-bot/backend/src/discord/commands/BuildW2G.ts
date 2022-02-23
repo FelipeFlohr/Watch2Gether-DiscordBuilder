@@ -1,139 +1,146 @@
 import {Command} from "../models/Command";
-import {CommandInteraction, Message, TextBasedChannel} from "discord.js";
-import {workingSites} from "../../../links.json";
-import {Poster, SELENIUM_ADDRESS} from "../../utils/Poster";
 import {io} from "socket.io-client"
+import {workingSites} from "../../../links.json"
+import {CommandInteraction, Message, TextBasedChannel} from "discord.js";
+import {Watch2GetherLinks} from "../models/W2GLinks";
+import {Poster} from "../../utils/Poster";
 
 const socket = io("http://localhost:3000") // Socket.IO address
 
 export class Build implements Command{
+    channel: TextBasedChannel;
+    interaction: CommandInteraction;
 
-    async execute(interaction?: CommandInteraction) {
-        console.log("W2G Builder executed")
+    constructor(interaction?: CommandInteraction) {
+        this.interaction = interaction
+        this.channel = interaction.channel
+    }
 
-        let channel: TextBasedChannel = interaction.channel
-        console.log("Going to find W2G Link")
+    async execute() {
+        const messages = await this.getMessagesAfterW2GLink()
+        const parsedMessages = this.parseMessageArrayToVideoLinks(messages)
 
-        // Will try to find a W2G link within a range of 500 messages
-        let msgArray: Message[] = []
-        let lastMsgId: string = channel.lastMessageId;
-        let counter = 0
-        let w2gLinkFound = false
-        let w2gLink: Message
-        const counterLimit = 5
+        await this.interaction.reply({
+            content: `Starting to build the Watch2Gether room. Working videos: ${parsedMessages.workingVideos.length} | Non working videos: ${parsedMessages.nonWorkingVideos.length} | Total: ${parsedMessages.nonWorkingVideos.length + parsedMessages.workingVideos.length}`
+        })
 
-        while (counter < counterLimit && !w2gLinkFound) {
-            await channel.messages.fetch({limit: 100, before: lastMsgId})
-                .then(messages => {
-                    // Will add the messages to the array
-                    messages.forEach(msg => msgArray.push(msg))
+        // Going to post the W2G data to Selenium
+        await Poster.postToBuildW2G({
+            "urls": parsedMessages.workingVideos
+        }).then(w2gData => {
+            const allNonWorkingVideos = parsedMessages.nonWorkingVideos.concat(w2gData.nonWorkingVideos)
+            socket.emit("urls", allNonWorkingVideos)
+            this.channel.send(`Watch2Gether room has been built. Link: ${w2gData.url}`)
+        }, rej => {
+            this.channel.send("An error occurred during the building process. Please check to see if the building utils is running\nRejection: " + rej)
+        }).catch(err => {
+            this.channel.send("An error occurred during the building process. Please check to see if the building utils is running\nError: " + err)
+        })
+    }
 
-                    // Will set the last message ID
-                    lastMsgId = msgArray.at(msgArray.length - 1).id
+    private parseMessageArrayToVideoLinks(msgArray: Message[]): Watch2GetherLinks {
+        const links = new Watch2GetherLinks()
 
-                    // Will try to find any Watch2Gether link
-                    let w2gArray = msgArray.filter(msg => {
-                        let anyMatchSplit = false
-
-                        msg.content.split(" ").forEach(splitMsg => {
-                            if (splitMsg.startsWith("https://w2g.tv") || splitMsg.startsWith("https://www.watch2gether.com")) {
-                                anyMatchSplit = true
-                            }
-                        })
-
-                        return anyMatchSplit
-                    })
-
-                    console.log(`Total of Watch2Gether links: ${w2gArray.length}`)
-                    // If array > 1, then a link was found
-                    if (w2gArray.length > 0) {
-                        w2gLinkFound = true
-                        w2gLink = w2gArray.at(0)
-                        console.log("Watch2Gether link was found\n")
-                    }
-
-                    counter++
-                })
-        }
-
-        // Now it will get all videos after the last W2G Link
-        let afterW2GMessages: Message[] = []
-
-        await channel.messages.fetch({after: w2gLink.id, limit: 100})
-            .then(messages => {
-                messages.forEach(msg => afterW2GMessages.push(msg))
-            })
-
-        // If there is 100 messages, then it will try to find more
-        if (afterW2GMessages.length == 100) {
-            let messagesAfterHundred: Message[] = []
-            let lastMessage = afterW2GMessages.at(afterW2GMessages.length - 1)
-            let limitReached = false
-
-            while (!limitReached) {
-                await channel.messages.fetch({after: lastMessage.id})
-                    .then(messages => {
-                        let iterationArray: Message[] = []
-
-                        messages.forEach(msg => {
-                            iterationArray.push(msg)
-                        })
-
-                        if (iterationArray.length < 100) {
-                            limitReached = true
-                        }
-
-                        lastMessage = iterationArray.at(iterationArray.length - 1)
-                        iterationArray.forEach(msg => messagesAfterHundred.push(msg))
-                    })
-            }
-
-            messagesAfterHundred.forEach(msg => afterW2GMessages.push(msg))
-        }
-
-        // Now it will try to parse the messages
-        let w2gVideos: string[] = []
-        let nonW2GVideos: string[] = []
-
-        afterW2GMessages.forEach(msg => {
-            let msgSplit = msg.content.split(" ") // <- Will split each space for every message
-            msgSplit.forEach(m => {
-                const urlIsWorkingWebsite = () => { // Checks if the URL is part of the Working Websites, defined in "links.json"
+        msgArray.forEach(msg => {
+            msg.content.trim().split(" ").forEach(splitMsg => {
+                const urlIsWorkingWebsite = function() {
                     let anyMatch = false
 
-                    workingSites.forEach(site => {
-                        if (m.startsWith(site)) anyMatch = true;
+                    workingSites.forEach(website => {
+                        if (splitMsg.startsWith(website)) anyMatch = true
                     })
 
-                    return anyMatch;
+                    return anyMatch
                 }
 
                 if (urlIsWorkingWebsite()) {
-                    w2gVideos.push(m)
-                } else if (m.startsWith("https://m.facebook")) { // <- Exception for Facebook Mobile links
-                    nonW2GVideos.push(m.replace("m.facebook", "facebook"))
-                } else if (m.startsWith("https://")) { // <- If the URL is not a working website, then it will be a "non W2G" video
-                    nonW2GVideos.push(m)
+                    links.workingVideos.push(splitMsg)
+                } else if (splitMsg.startsWith("https://m.facebook")) {
+                    links.nonWorkingVideos.push(splitMsg)
+                } else if (splitMsg.startsWith("https://")) {
+                    links.nonWorkingVideos.push(splitMsg)
+                } else {
+                    console.log("Ignoring message: " + splitMsg)
                 }
             })
         })
 
-        await interaction.reply({
-            content: `Starting to build the Watch2Gether room. Total amount of videos: ${w2gVideos.length + nonW2GVideos.length}`
+        return links
+    }
+
+    private async getMessagesAfterW2GLink(): Promise<Message[]> {
+        const messages = await this.getMessagesBefore(await this.getLastChannelMessage())
+        let anyLink: boolean = Build.getW2GLinkIndexWithinArray(messages) != -1
+
+        if (anyLink) {
+            console.log("There's a link within the first 100 messages!")
+
+            const afterLinkArray = Build.getArrayAfterW2GLink(messages)
+            afterLinkArray.push(await this.getLastChannelMessage())
+
+            return afterLinkArray
+        } else {
+            console.log("No W2G link was found within the first 100 messages. Trying the first 200...")
+            let lastMessages: Message[] = await this.getMessagesBefore(messages.at(0))
+
+            const concatArray = messages.reverse().concat(lastMessages.reverse())
+
+            const afterLinkArray = Build.getArrayAfterW2GLink(concatArray)
+            afterLinkArray.push(await this.getLastChannelMessage())
+            return afterLinkArray
+        }
+    }
+
+    private async getMessagesBefore(msg: Message): Promise<Message[]> {
+        const msgs: Message[] = []
+        await this.channel.messages.fetch({ limit: 100, before: msg.id })
+            .then(messages => {
+                messages.forEach(msg => msgs.push(msg))
+            })
+
+        return msgs.reverse()
+    }
+
+    private async getLastChannelMessage() : Promise<Message> {
+        let message: Message
+
+        await this.channel.messages.fetch({limit: 1}).then(msgCollection => {
+            message = msgCollection.at(0)
         })
 
-        console.log(`W2G Videos: ${w2gVideos.length}\nNon W2G Videos: ${nonW2GVideos.length}. Posting to Selenium Server (${SELENIUM_ADDRESS})...`)
+        return message
+    }
 
-        await Poster.postToBuildW2G({
-            "urls": w2gVideos.reverse()
-        }).then(w2gData => { // The following block will be executed if there's no problem on getting the W2G data
-            const allNonWorkingVideos = nonW2GVideos.concat(w2gData.nonWorkingVideos) // Will join the W2G non working videos + Non W2G videos
-            socket.emit("urls", allNonWorkingVideos) // Will send the videos through Socket.IO, which is being used on Frontend
-            channel.send(`Watch2Gether built. Link: ${w2gData.url}`) // Will post the W2G URL on the Discord channel
-        }, rej => {
-            channel.send("An error occurred during the building process. Please check to see if the building utils is running\nRejection: " + rej)
-        }).catch(err => {
-            channel.send("An error occurred during the building process. Please check to see if the building utils is running\nError: " + err)
+    // Gets the first Watch2Gether link inside the array. If it returns -1, then no link was available
+    private static getW2GLinkIndexWithinArray(array: Message[]): number {
+        return array.findIndex(msg => {
+            const msgFormatted = msg.content.trim().split(" ")
+            let linkFound = false
+
+            msgFormatted.forEach(msgSplit => {
+                if (!linkFound) {
+                    linkFound = this.isW2GLink(msgSplit)
+                }
+            })
+
+            return linkFound
         })
+    }
+
+    private static getArrayAfterW2GLink(array: Message[]): Message[] {
+        const messages: Message[] = []
+        const index: number = this.getW2GLinkIndexWithinArray(array)
+
+        if (index == -1) return null
+
+        for (let i = 0; i < index; i++) {
+            messages.push(array.at(i))
+        }
+
+        return messages
+    }
+
+    private static isW2GLink(link: string): boolean {
+        return link.startsWith("https://w2g.tv") || link.startsWith("https://www.watch2gether.com")
     }
 }
