@@ -129,7 +129,7 @@ export class Build implements Command{
 
     private static getArrayAfterW2GLink(array: Message[]): Message[] {
         const messages: Message[] = []
-        const index: number = this.getW2GLinkIndexWithinArray(array)
+        const index: number = this.getW2GLinkIndexWithinArray(array.reverse())
 
         if (index == -1) return null
 
