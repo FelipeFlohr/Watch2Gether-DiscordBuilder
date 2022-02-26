@@ -16,9 +16,14 @@ export class Build implements Command{
         this.channel = interaction.channel
     }
 
+    /*
+    - Main function
+    - Creates a Watch2Gether room and sends the link to a Discord channel.
+    - The "non-working videos" are going to be sent to "localhost:3000" via Socket.IO
+     */
     async execute() {
-        const messages = await this.getMessagesAfterW2GLink()
-        const parsedMessages = this.parseMessageArrayToVideoLinks(messages)
+        const messages = await this.getMessagesAfterW2GLink() // Gets all the messages after the last Watch2Gether link
+        const parsedMessages = this.parseMessageArrayToVideoLinks(messages) // Will parse the messages
 
         await this.interaction.reply({
             content: `Starting to build the Watch2Gether room. Working videos: ${parsedMessages.workingVideos.length} | Non working videos: ${parsedMessages.nonWorkingVideos.length} | Total: ${parsedMessages.nonWorkingVideos.length + parsedMessages.workingVideos.length}`
@@ -38,6 +43,11 @@ export class Build implements Command{
         })
     }
 
+    /*
+    - Will parse an array of Message type to a Watch2GetherLinks type (src/discord/models/W2GLinks.ts).
+    - Every message of the array is going to be iterated through a loop. If the message matches a link described in
+    links.json (./links.json), then it is considered a "working video", if not then it is considered a "non-working video"
+     */
     private parseMessageArrayToVideoLinks(msgArray: Message[]): Watch2GetherLinks {
         const links = new Watch2GetherLinks()
 
@@ -68,6 +78,11 @@ export class Build implements Command{
         return links
     }
 
+    /*
+    - Searches this.channel to get all the messages after the last Watch2Gether link.
+    - Returns a Message array containing all the messages after the last Watch2Gether link sent on the channel which the
+    command has been summoned.
+     */
     private async getMessagesAfterW2GLink(): Promise<Message[]> {
         const messages = await this.getMessagesBefore(await this.getLastChannelMessage())
         let anyLink: boolean = Build.getW2GLinkIndexWithinArray(messages) != -1
@@ -91,6 +106,9 @@ export class Build implements Command{
         }
     }
 
+    /*
+    - Gets messages before the argument passed. Limit is one hundred.
+     */
     private async getMessagesBefore(msg: Message): Promise<Message[]> {
         const msgs: Message[] = []
         await this.channel.messages.fetch({ limit: 100, before: msg.id })
@@ -101,6 +119,10 @@ export class Build implements Command{
         return msgs.reverse()
     }
 
+    /*
+    - Return the last channel message as a Message type. For some reason, this was needed because this.channel.lastMessage
+    was not working.
+     */
     private async getLastChannelMessage() : Promise<Message> {
         let message: Message
 
@@ -111,7 +133,10 @@ export class Build implements Command{
         return message
     }
 
-    // Gets the first Watch2Gether link inside the array. If it returns -1, then no link was available
+    /*
+    - Gets the index of the first Watch2Gether link inside an array of Message type
+    - Returns the index
+     */
     private static getW2GLinkIndexWithinArray(array: Message[]): number {
         return array.findIndex(msg => {
             const msgFormatted = msg.content.trim().split(" ")
@@ -127,6 +152,10 @@ export class Build implements Command{
         })
     }
 
+    /*
+    - Gets an array of Message type containing only the messages sent after the last Watch2Gether link on the channel
+    which the command has been summoned.
+     */
     private static getArrayAfterW2GLink(array: Message[]): Message[] {
         const messages: Message[] = []
         const index: number = this.getW2GLinkIndexWithinArray(array.reverse())
@@ -140,6 +169,9 @@ export class Build implements Command{
         return messages
     }
 
+    /*
+    - Determines if a string is a "Watch2Gether link" or not.
+     */
     private static isW2GLink(link: string): boolean {
         return link.startsWith("https://w2g.tv") || link.startsWith("https://www.watch2gether.com")
     }

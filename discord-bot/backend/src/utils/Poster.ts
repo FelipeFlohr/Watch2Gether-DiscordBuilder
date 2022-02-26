@@ -2,7 +2,9 @@ import axios from "axios"
 
 export const SELENIUM_ADDRESS = process.env.SELENIUM_ADDRESS || "http://localhost:8080"
 
-// Class for executing POSTs
+/*
+- Posts Watch2Gether data to the Selenium Builder
+ */
 export class Poster {
 
     public static async postToBuildW2G(data: any, url: string = `${SELENIUM_ADDRESS}/w2g/build`): Promise<{

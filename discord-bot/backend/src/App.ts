@@ -1,7 +1,7 @@
 import {Bot} from "./discord/client/Client"
 import {SocketConnection} from "./utils/Socket";
 
-const bot = new Bot() // Instanciates the Bot
+const bot = new Bot() // Instantiates the Bot
 bot.run()
 
-const socketConnection = new SocketConnection() // Instanciates the Socket.IO connection
+new SocketConnection() // Instantiates the Socket.IO connection

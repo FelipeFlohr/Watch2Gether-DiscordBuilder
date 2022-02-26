@@ -1,7 +1,9 @@
 const PORT = process.env.PORT || 3000
 const NWV_ADDRESS = process.env.NWV_ADDRESS || "http://localhost:5500"
 
-// Class for instantiate a Socket.IO connection
+/*
+- Class for instantiating a Socket.IO connection
+ */
 export class SocketConnection {
     private io
 
