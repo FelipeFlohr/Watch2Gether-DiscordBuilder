@@ -105,4 +105,4 @@ Q: I found some bug, how can I report?
 
 ## 6 License
 
-Feel free to do whatever you want with this code, but I would be extremely happy if you credit me :)
+Feel free to do whatever you want with this code :)
