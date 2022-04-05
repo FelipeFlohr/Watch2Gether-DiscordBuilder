@@ -2,7 +2,6 @@ package com.felipeflohr.seleniumw2g.view;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import javax.swing.JFrame;
@@ -43,7 +42,7 @@ public class ConsoleGUI extends JFrame {
 	public PrintStream getPrintStream() {
 		OutputStream outputStream = new OutputStream() {
 			@Override
-			public void write(int b) throws IOException {
+			public void write(int b) {
 				textArea.append(String.valueOf((char) b));
 			}
 		};

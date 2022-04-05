@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Seleniumw2gApplication {
 
 	public static void main(String[] args) {
-		//new ConsoleGUI(); // <- Turn off the commentaries to enable a Swing Console GUI
+		// new ConsoleGUI(); // <- Turn off the commentaries to enable a Swing Console GUI
 		SpringApplication.run(Seleniumw2gApplication.class, args);
 	}
 

@@ -69,8 +69,6 @@ export class Build implements Command{
                     links.nonWorkingVideos.push(splitMsg.replace("m.facebook", "facebook"))
                 } else if (splitMsg.startsWith("https://")) {
                     links.nonWorkingVideos.push(splitMsg)
-                } else {
-                    console.log("Ignoring message: " + splitMsg)
                 }
             })
         })
@@ -100,7 +98,7 @@ export class Build implements Command{
 
             const concatArray = messages.reverse().concat(lastMessages.reverse())
 
-            const afterLinkArray = Build.getArrayAfterW2GLink(concatArray)
+            const afterLinkArray = Build.getArrayAfterW2GLink(concatArray.reverse())
             afterLinkArray.push(await this.getLastChannelMessage())
             return afterLinkArray
         }
@@ -130,6 +128,7 @@ export class Build implements Command{
             message = msgCollection.at(0)
         })
 
+        console.log(`[INFO] Last message on channel found. Content: ${message.content}. Date: ${message.createdAt}`)
         return message
     }
 

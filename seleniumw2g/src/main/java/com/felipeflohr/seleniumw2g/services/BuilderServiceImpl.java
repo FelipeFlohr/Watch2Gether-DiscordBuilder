@@ -4,11 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -25,12 +21,12 @@ import com.felipeflohr.seleniumw2g.model.Builder;
 class BuilderServiceImpl implements BuilderService {
 
 	private WebDriver driver;
-	private List<String> nonWorkingVideos;
-	private FirefoxOptions firefoxOptions;
+	private final List<String> nonWorkingVideos;
+	private final FirefoxOptions browserOptions;
 
 	public BuilderServiceImpl() {
-		firefoxOptions = new FirefoxOptions();
-		firefoxOptions.addArguments("--mute-audio", "--headless", "--disable-gpu");
+		this.browserOptions = new FirefoxOptions();
+		browserOptions.addArguments("--headless");
 		WebDriverManager.firefoxdriver().setup();
 		
 		this.nonWorkingVideos = new ArrayList<>();
@@ -56,7 +52,7 @@ class BuilderServiceImpl implements BuilderService {
 	@Override
 	public void createDriver() {
 		if (driver == null) {
-			driver = new FirefoxDriver(firefoxOptions);
+			driver = new FirefoxDriver(this.browserOptions);
 		}
 	}
 
@@ -71,7 +67,7 @@ class BuilderServiceImpl implements BuilderService {
 		// Elements
 		final var createRoomBtn = By.id("create_room_button");
 		final var nicknameInput = By.id("intro-nickname");
-		final var enterRoomBtn = By.xpath("//*[@id=\"intro-modal\"]/div[2]/div");
+		final var enterRoomBtn = By.cssSelector("div.actions > div.ui.fluid.green.cancel.button");
 		final WebElement roomInput;
 
 		// Gets to the page
@@ -109,33 +105,26 @@ class BuilderServiceImpl implements BuilderService {
 	@Override
 	public void addVideo(String url) {
 		// Elements
-		final var searchBar = By.id("search-bar-input");
-//		final var playlist = By.xpath("/html/body/div[4]/div[2]/div[2]/div[2]/div[3]/div[1]/div/select/option");
-		final var addVideoBtn = By.xpath("//*[@id=\"w2g-search-results\"]/div[4]/div/div[3]/div[2]");
-
-		// This snippet of code used to work in the past, but for some reason it stopped
-		// Waits until the playlist be available
-//		try {
-//			new WebDriverWait(driver, 15).until(ExpectedConditions.presenceOfElementLocated(playlist));
-//		} catch (TimeoutException e) {
-//			throw new ElementNotFoundException("The playlist element was not found. Was the room created?", e);
-//		}
+		final String searchBarId = "search-bar-input";
+		final String addVideoBtnSelector = "div.w2g-items-grid:nth-child(4) > div:nth-child(1) > div:nth-child(3) > div:nth-child(2)";
 
 		// Clears the search bar
-		final WebElement searchBarElement = driver.findElement(searchBar);
+		final WebElement searchBarElement = driver.findElement(By.id(searchBarId));
 		searchBarElement.clear();
 
 		// Inserts the URL
 		searchBarElement.sendKeys(url);
 
-		// Press enter in the search bar
+		// Press enter on the search bar
 		searchBarElement.sendKeys("\uE007");
 
 		// Clicks to add the video
 		try {
-			final WebElement addVideoBtnElement = new WebDriverWait(driver, 5)
-					.until(ExpectedConditions.elementToBeClickable(addVideoBtn));
-			addVideoBtnElement.click();
+			final WebDriverWait wait = new WebDriverWait(this.driver, 5, 1000);
+			final WebElement addVideoBtn = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(addVideoBtnSelector)));
+
+			((JavascriptExecutor) this.driver).executeScript("arguments[0].scrollIntoView(true);", addVideoBtn);
+			addVideoBtn.click();
 		} catch (TimeoutException e) {
 			System.out.println("Video " + url + " was ignored. Moving forward...");
 			nonWorkingVideos.add(url);
@@ -152,9 +141,7 @@ class BuilderServiceImpl implements BuilderService {
 			throw new EmptyVideoArrayException("Array is empty");
 		}
 
-		Arrays.asList(urls).forEach(url -> {
-			addVideo(url);
-		});
+		Arrays.asList(urls).forEach(this::addVideo);
 	}
 
 	@Override

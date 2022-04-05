@@ -1,6 +1,6 @@
-import {Client, Intents} from "discord.js";
-import {token, guildId} from "../../../bot.json"
-import {Build} from "../commands/BuildW2G";
+import { Client, Intents } from "discord.js";
+import { token, guildId } from "../../../bot.json"
+import { Build } from "../commands/BuildW2G";
 
 export class Bot extends Client {
 

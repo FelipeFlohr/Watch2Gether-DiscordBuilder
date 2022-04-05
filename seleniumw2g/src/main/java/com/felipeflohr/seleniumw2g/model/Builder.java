@@ -22,8 +22,8 @@ public class Builder {
 	}
 
 	/**
-	 * Getter for the non working videos
-	 * @return a String array containing the non working videos
+	 * Getter for the non-working videos
+	 * @return a String array containing the non-working videos
 	 * @see com.felipeflohr.seleniumw2g.model.Builder#Builder()
 	 */
 	public String[] getNonWorkingVideos() {
@@ -31,8 +31,8 @@ public class Builder {
 	}
 
 	/**
-	 * Setter for the non working videos
-	 * @param nonWorkingVideos a Array containing non working videos
+	 * Setter for the non-working videos
+	 * @param nonWorkingVideos an Array containing non-working videos
 	 * @see com.felipeflohr.seleniumw2g.model.Builder#Builder(String[], String)
 	 */
 	public void setNonWorkingVideos(String[] nonWorkingVideos) {

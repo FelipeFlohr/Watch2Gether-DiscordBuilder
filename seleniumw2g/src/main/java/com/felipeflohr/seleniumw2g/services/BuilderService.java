@@ -14,39 +14,39 @@ public interface BuilderService {
 	 * @return a Builder class
 	 * @see com.felipeflohr.seleniumw2g.model.Builder
 	 */
-	public abstract Builder build(String[] videos);
+	Builder build(String[] videos);
 
 	/**
 	 * Creates the Web Driver
 	 */
-	public abstract void createDriver();
+	void createDriver();
 
 	/**
 	 * Closes the Web Driver
 	 */
-	public abstract void close();
+	void close();
 
 	/**
 	 * Creates the Watch2Gether and returns the URLs
 	 * @return The Watch2Gether room's URL
 	 */
-	public abstract String createRoomGetUrl();
+	String createRoomGetUrl();
 
 	/**
 	 * Add a video to the current Watch2Gether room
 	 * @param url URL of the video
 	 */
-	public abstract void addVideo(String url);
+	void addVideo(String url);
 
 	/**
 	 * Add videos to the current Watch2Gether room
 	 * @param urls An array of strings containing the URLs
 	 */
-	public abstract void addVideos(String[] urls);
+	void addVideos(String[] urls);
 
 	/**
-	 * Get the non working videos
-	 * @return An array of containing the non working videos
+	 * Get the non-working videos
+	 * @return An array of containing the non-working videos
 	 */
-	public abstract String[] getNonWorkingVideos();
+	String[] getNonWorkingVideos();
 }

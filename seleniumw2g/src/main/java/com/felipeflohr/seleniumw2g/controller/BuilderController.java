@@ -25,11 +25,6 @@ public class BuilderController {
 	@Autowired
 	BuilderService builderService;
 
-	@GetMapping(path = "/helloworld")
-	public String helloWorld() {
-		return "Hello, World!";
-	}
-
 	/**
 	 * Builds a Watch2Gether room using the provided URLs.
 	 * @param urls The URLs which will be added on the Watch2Gether room. Needs to be in comply with the BuildUrls.
