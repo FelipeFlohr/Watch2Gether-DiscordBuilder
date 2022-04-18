@@ -5,7 +5,7 @@ networks:
     external: true
 services:
   selenium:
-    image: felipeflohr/w2gds-botselenium:1.2
+    image: felipeflohr/w2gds-botselenium:1.2.1
     container_name: dsbotselenium
     build:
       context: ./seleniumw2g

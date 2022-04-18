@@ -106,7 +106,7 @@ class BuilderServiceImpl implements BuilderService {
 	public void addVideo(String url) {
 		// Elements
 		final String searchBarId = "search-bar-input";
-		final String addVideoBtnSelector = "div.w2g-items-grid:nth-child(4) > div:nth-child(1) > div:nth-child(3) > div:nth-child(2)";
+		final String addVideoBtnSelector = "button.ui.mini.button.mod-pl.mod_pl_interaction.w2g-until-mobile";
 
 		// Clears the search bar
 		final WebElement searchBarElement = driver.findElement(By.id(searchBarId));
@@ -123,8 +123,7 @@ class BuilderServiceImpl implements BuilderService {
 			final WebDriverWait wait = new WebDriverWait(this.driver, 5, 1000);
 			final WebElement addVideoBtn = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(addVideoBtnSelector)));
 
-			((JavascriptExecutor) this.driver).executeScript("arguments[0].scrollIntoView(true);", addVideoBtn);
-			addVideoBtn.click();
+			((JavascriptExecutor) this.driver).executeScript("arguments[0].click();", addVideoBtn);
 		} catch (TimeoutException e) {
 			System.out.println("Video " + url + " was ignored. Moving forward...");
 			nonWorkingVideos.add(url);
