@@ -3,6 +3,4 @@ import discord from "./discord";
 
 export default (app: Application) => {
     discord(app)
-
-    console.log("INFO | Controllers ready")
 }

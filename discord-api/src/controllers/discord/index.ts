@@ -1,6 +1,7 @@
-import { Application } from "express";
-import GET from "./GET";
+import { getMessages } from "./GET";
 
-export default (app: Application) => {
-    GET(app)
+export default {
+    GET: {
+        getMessages: getMessages
+    }
 }

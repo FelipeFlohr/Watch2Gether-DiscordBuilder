@@ -1,0 +1,6 @@
+{
+    "allowed": ["https://www.youtube.com", "https://twitter.com", "https://youtu.be"],
+    "nonAllowed": ["https://www.facebook", "https://facebook", "https://fb", "https://www.reddit"],
+    "mobile": ["https://m.facebook.com"],
+    "w2g": "https://w2g.tv"
+}

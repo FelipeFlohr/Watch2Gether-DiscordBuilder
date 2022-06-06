@@ -1,5 +1,6 @@
 import { Client, Guild, Intents, TextChannel } from "discord.js"
 import EnvironmentSettings from "../env/envConfig"
+import MessageHandler from "../models/message"
 
 export default class DiscordService {
     public buildingRoom: boolean
@@ -33,6 +34,33 @@ export default class DiscordService {
 
     public async runSetup() {
         return "Hello, World!"
+    }
+
+    public async getW2GMessages(channelId: string) {
+        const guildId = EnvironmentSettings.getInstance().discord.guild
+        const guild = await this.client.guilds.fetch(guildId)
+
+        const channelRaw = await guild.channels.fetch(channelId)
+        if (!channelRaw) throw `CHANNEL_DOES_NOT_EXISTS`
+
+        const channel = await channelRaw.fetch()
+        if (channel instanceof TextChannel) {
+            const rawMessages = await channel.messages.fetch({ limit: 100 })
+            const messages = new MessageHandler(rawMessages)
+
+            while (!messages.hasWatch2GetherLink()) {
+                const newMessages = await channel.messages.fetch({ limit: 100, before: messages.getLastMessage().id })
+                messages.concat(newMessages)
+            }
+
+            return messages.getWatch2GetherLinks()
+        } else {
+            throw `CHANNEL_IS_NOT_TEXT_CHANNEL`
+        }
+    }
+
+    public close() {
+        this.client.destroy()
     }
 
     private instantiateCommands() {
@@ -74,6 +102,8 @@ export default class DiscordService {
             switch (commandName) {
                 case "build":
                     this.buildingRoom = true
+                    const messages = await this.getW2GMessages(interaction.channelId)
+
                     break
             }
         })
