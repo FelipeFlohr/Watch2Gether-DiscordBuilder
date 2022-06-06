@@ -3,6 +3,7 @@ dotenv.config()
 
 export default class EnvironmentSettings {
     public app: AppConfig
+    public discord: DiscordConfig
 
     private static instance: EnvironmentSettings
 
@@ -10,6 +11,12 @@ export default class EnvironmentSettings {
         this.app = {
             port: this.handleInteger(process.env.APP_PORT as string)
         }
+        this.discord = {
+            token: process.env.DISCORD_TOKEN as string,
+            guild: process.env.DISCORD_GUILD as string
+        }
+
+        console.log("INFO | Loaded environment variables")
     }
 
     public static getInstance() {
@@ -27,4 +34,9 @@ export default class EnvironmentSettings {
 
 type AppConfig = {
     port: number
+}
+
+type DiscordConfig = {
+    token: string
+    guild: string
 }

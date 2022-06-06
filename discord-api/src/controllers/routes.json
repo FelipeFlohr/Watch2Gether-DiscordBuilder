@@ -1,0 +1,6 @@
+{
+    "DISCORD": {
+        "ROOT": "/discord",
+        "MESSAGES": "/discord/messages/:guild"
+    }
+}

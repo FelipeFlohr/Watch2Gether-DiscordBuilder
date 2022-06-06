@@ -7,6 +7,8 @@ export function error(res: Response, code: number, msg: string) {
         msg: msg
     }
 
+    if (code >= 500) console.log(`${new Date()} | A Server-side error occurred. Message is: ${msg}`)
+
     res.status(code).send(error)
 }
 
@@ -26,5 +28,5 @@ export function message(res: Response, code: number, message: string) {
         msg: message
     }
 
-    res.status(code).send(message)
+    res.status(code).send(msg)
 }

@@ -1,1 +1,4 @@
 APP_PORT=3000
+
+DISCORD_TOKEN=your token
+DISCORD_GUILD=your guild id
