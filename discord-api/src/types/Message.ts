@@ -4,3 +4,8 @@ export type MessageAbstraction = {
     date: Date
     user: string | null | undefined
 }
+
+export type VideoBuilderResponse = {
+    url: string
+    nonWorkingVideos: string[]
+}

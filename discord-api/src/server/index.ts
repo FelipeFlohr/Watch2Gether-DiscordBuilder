@@ -20,7 +20,7 @@ export default function () {
         .then(() => {
             // START
             app.listen(PORT, () => {
-                console.log(`INFO | Application up and running at http://localhost:${PORT}\n`)
+                console.log(`INFO | Application up and running at http://localhost:${PORT}\n==========================================================`)
             })
         })
         .catch(console.log)

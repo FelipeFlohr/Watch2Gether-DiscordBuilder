@@ -1,6 +1,8 @@
+import axios from "axios"
 import { Client, Guild, Intents, TextChannel } from "discord.js"
 import EnvironmentSettings from "../env/envConfig"
 import MessageHandler from "../models/message"
+import { VideoBuilderResponse } from "../types/Message"
 
 export default class DiscordService {
     public buildingRoom: boolean
@@ -103,6 +105,21 @@ export default class DiscordService {
                 case "build":
                     this.buildingRoom = true
                     const messages = await this.getW2GMessages(interaction.channelId)
+
+                    await interaction.reply("Creating a Watch2Gether room")
+                    try {
+                        const result = await axios.post(
+                            "http://localhost:8080/build/videos",
+                            {
+                                videos: messages.working
+                            }
+                        )
+                        const data = result.data as VideoBuilderResponse
+                        await interaction.channel?.send(`Room created. Link: ${data.url}`)
+                        console.log(data)
+                    } catch {
+                        await interaction.channel?.send("Build failed. Watch2Gether builder is not reachable.")
+                    }
 
                     break
             }
