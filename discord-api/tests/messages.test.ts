@@ -5,7 +5,7 @@ test("Amount of messages is correct", async () => {
     const discord = await DiscordService.getInstance()
 
     const messages = await discord.getW2GMessages(roomId)
-    const amount = messages.working.length
+    const amount = messages.getWatch2GetherLinks().working.length
 
     discord.close()
 

@@ -2,7 +2,9 @@ import axios from "axios"
 import { Client, Guild, Intents, TextChannel } from "discord.js"
 import EnvironmentSettings from "../env/envConfig"
 import MessageHandler from "../models/message"
+import { app } from "../server"
 import { VideoBuilderResponse } from "../types/Message"
+import Socket from "../utils/socket"
 
 export default class DiscordService {
     public buildingRoom: boolean
@@ -55,7 +57,7 @@ export default class DiscordService {
                 messages.concat(newMessages)
             }
 
-            return messages.getWatch2GetherLinks()
+            return messages
         } else {
             throw `CHANNEL_IS_NOT_TEXT_CHANNEL`
         }
@@ -111,12 +113,19 @@ export default class DiscordService {
                         const result = await axios.post(
                             "http://localhost:8080/build/videos",
                             {
-                                videos: messages.working
+                                videos: messages.getWatch2GetherLinks().working.map(m => m.content)
                             }
                         )
                         const data = result.data as VideoBuilderResponse
                         await interaction.channel?.send(`Room created. Link: ${data.url}`)
-                        console.log(data)
+
+                        // Send socket to Frontend
+                        const socket = Socket.getInstance()
+                        const users = MessageHandler.getUsersAmountOfVideos(messages.getWatch2GetherLinks().working.concat(messages.getWatch2GetherLinks().nonWorking))
+                        socket.emitVideoOpenerData({
+                            nonWorking: data.nonWorkingVideos.concat(messages.getWatch2GetherLinks().nonWorking.map(m => m.content)),
+                            users: users
+                        })
                     } catch {
                         await interaction.channel?.send("Build failed. Watch2Gether builder is not reachable.")
                     }

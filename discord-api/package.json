@@ -20,7 +20,8 @@
     "discord.js": "^13.7.0",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
-    "express-validator": "^6.14.1"
+    "express-validator": "^6.14.1",
+    "socket.io": "^4.5.1"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.2",

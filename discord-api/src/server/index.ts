@@ -3,12 +3,13 @@ import EnvironmentSettings from "../env/envConfig"
 import middlewares from "../middlewares"
 import routes from "../routes"
 import DiscordService from "../services/discord"
+import Socket from "../utils/socket"
 
 const PORT = EnvironmentSettings.getInstance().app.port
 
-export default function () {
-    const app = express()
+export const app = express()
 
+export default function () {
     // MIDDLEWARES
     middlewares(app)
 
@@ -20,6 +21,7 @@ export default function () {
         .then(() => {
             // START
             app.listen(PORT, () => {
+                Socket.getInstance()
                 console.log(`INFO | Application up and running at http://localhost:${PORT}\n==========================================================`)
             })
         })

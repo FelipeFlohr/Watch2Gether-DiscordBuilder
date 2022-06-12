@@ -9,3 +9,8 @@ export type VideoBuilderResponse = {
     url: string
     nonWorkingVideos: string[]
 }
+
+export type Watch2GetherMessages = {
+    working: MessageAbstraction[]
+    nonWorking: MessageAbstraction[]
+}

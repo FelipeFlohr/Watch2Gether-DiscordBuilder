@@ -1,6 +1,7 @@
 import { Collection, Message } from "discord.js"
-import { MessageAbstraction } from "../types/Message"
+import { MessageAbstraction, Watch2GetherMessages } from "../types/Message"
 import { w2g, allowed, nonAllowed, mobile } from "../services/platforms.json"
+import { User } from "../types/VideoOpener"
 
 export default class MessageHandler {
     public readonly content: MessageAbstraction[]
@@ -12,7 +13,7 @@ export default class MessageHandler {
                     id: v.id,
                     content: v.content,
                     date: v.createdAt,
-                    user: v.member?.nickname
+                    user: v.author.username
                 }
             })
         } else {
@@ -39,7 +40,7 @@ export default class MessageHandler {
                     id: v.id,
                     content: v.content,
                     date: v.createdAt,
-                    user: v.member?.nickname
+                    user: v.author.username
                 }
             })
 
@@ -49,39 +50,46 @@ export default class MessageHandler {
         }
     }
 
-    public getWatch2GetherLinks() {
+    public getWatch2GetherLinks(): Watch2GetherMessages {
         const sorted = this.content.sort((a, b) => b.date.getTime() - a.date.getTime())
         const linkIndex = sorted.findIndex(v => v.content.startsWith(w2g))
 
-        const working: string[] = sorted
+        const workingVideos: MessageAbstraction[] = sorted
             .slice(0, linkIndex)
-            .map(v => v.content)
             .map(v => {
-                const split = v.split(" ")
-                return split.find(s => s.startsWith("https://")) != undefined ? split.find(s => s.startsWith("https://")) as string : split[0]
+                const split = v.content.split(" ")
+                const content = split.find(s => s.startsWith("https://"))
+                return {
+                    content: content != undefined ? content : split[0],
+                    date: v.date,
+                    id: v.id,
+                    user: v.user
+                }
             })
             .filter(v => {
-                return allowed.some(a => v.startsWith(a))
+                return allowed.some(a => v.content.startsWith(a))
             })
 
-        const nonWorking: string[] = sorted
+        const nonWorkingVideos: MessageAbstraction[] = sorted
             .slice(0, linkIndex)
-            .map(v => v.content)
             .map(v => {
-                const split = v.split(" ")
-                return split.find(s => s.startsWith("https://")) != undefined ? split.find(s => s.startsWith("https://")) as string : split[0]
-            })
-            .map(v => {
-                if (mobile.some(m => v.startsWith(m))) return v.replace("https://m.", "https://")
-                return v
+                const split = v.content.split(" ")
+                let content = split.find(s => s.startsWith("https://"))
+                content = mobile.some(m => content?.startsWith(m)) ? content?.replace("https://m.", "https://") : content
+                return {
+                    content: content != undefined ? content : split[0],
+                    date: v.date,
+                    id: v.id,
+                    user: v.user
+                }
             })
             .filter(v => {
-                return nonAllowed.some(a => v.startsWith(a))
+                return nonAllowed.some(n => v.content.startsWith(n))
             })
 
             return {
-                working: working,
-                nonWorking: nonWorking
+                working: workingVideos,
+                nonWorking: nonWorkingVideos
             }
     }
 
@@ -91,12 +99,27 @@ export default class MessageHandler {
                 content: v.content,
                 date: v.createdAt,
                 id: v.id,
-                user: v.member?.nickname
+                user: v.author.username
             }
         })
     }
 
     public hasWatch2GetherLink() {
         return this.content.some(v => v.content.startsWith(w2g))
+    }
+
+    public static getUsersAmountOfVideos(msgs: MessageAbstraction[]): User[] {
+        const users = new Set<string>()
+        msgs.forEach(msg => {
+            if (msg.user) {
+                users.add(msg.user)
+            }
+        })
+
+        return Array.from(users).map(u => {
+            return {
+                [u.trim()]: msgs.filter(m => m.user === u).length
+            }
+        })
     }
 }
